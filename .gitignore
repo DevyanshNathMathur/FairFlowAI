@@ -1,0 +1,43 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Flask local files
+instance/
+.webassets-cache/
+
+# IDE files
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python build and package files
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary and log files
+*.tmp
+*.temp
+*.log
+*.bak
+*.old
+
+# Generated FairFlow reports
+FairFlow_Analysis_Report.pdf

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        FairFlow
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<header class="navbar">
+
+    <div class="page-width nav-inner">
+
+        <a
+            class="wordmark"
+            href="/">
+            FairFlow<span>.</span>
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="#product">
+                Product
+            </a>
+
+            <a href="#fairness">
+                Fairness
+            </a>
+
+            <a href="#workflow">
+                How it works
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section
+    class="hero"
+    id="product"
+>
+
+    <div class="page-width hero-layout">
+
+
+        <!-- LEFT -->
+
+        <div class="hero-copy">
+
+            <p class="overline">
+                SERVICE FLOW PLANNING
+            </p>
+
+
+            <h1>
+                Queues should work
+                <em>fairly</em>
+                for everyone.
+            </h1>
+
+
+            <p class="hero-description">
+
+                FairFlow analyses visitor flow,
+                identifies service bottlenecks and
+                evaluates staffing arrangements before
+                changes are made on the ground.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+                <button
+                    class="main-cta"
+                    id="analyzeSetupButton"
+                >
+                    Analyze your setup
+                </button>
+
+
+                <a
+                    href="#workflow"
+                    class="text-link"
+                >
+
+                    See how it works
+
+                    <span>
+                        ↗
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT SERVICE FLOW -->
+
+        <div class="flow-visual">
+
+
+            <div class="visual-top">
+
+                <div>
+
+                    <small>
+                        EXAMPLE SERVICE FLOW
+                    </small>
+
+                    <strong>
+                        Community Health Camp
+                    </strong>
+
+                </div>
+
+
+                <span>
+                    400 visitors
+                </span>
+
+            </div>
+
+
+
+            <div class="flow-map">
+
+
+                <!-- ENTRY -->
+
+                <div class="flow-column">
+
+                    <div class="flow-label">
+                        ENTRY
+                    </div>
+
+
+                    <div class="flow-node entry-node">
+                        Entry
+                    </div>
+
+                </div>
+
+
+                <div class="connector"></div>
+
+
+
+                <!-- REGISTRATION -->
+
+                <div class="flow-column">
+
+                    <div class="flow-label">
+                        STAGE 01
+                    </div>
+
+
+                    <div class="flow-node">
+
+                        <strong>
+                            Registration
+                        </strong>
+
+                        <span>
+                            2 counters
+                        </span>
+
+                    </div>
+
+
+                    <p class="flow-time good">
+                        6 min wait
+                    </p>
+
+                </div>
+
+
+                <div class="connector"></div>
+
+
+
+                <!-- VERIFICATION -->
+
+                <div class="flow-column problem-column">
+
+                    <div class="flow-label">
+                        STAGE 02
+                    </div>
+
+
+                    <div class="flow-node problem-node">
+
+                        <strong>
+                            Verification
+                        </strong>
+
+                        <span>
+                            1 counter
+                        </span>
+
+                    </div>
+
+
+                    <p class="flow-time bad">
+                        31 min wait
+                    </p>
+
+
+                    <div class="problem-note">
+                        Bottleneck
+                    </div>
+
+                </div>
+
+
+                <div class="connector"></div>
+
+
+
+                <!-- SERVICE -->
+
+                <div class="flow-column">
+
+                    <div class="flow-label">
+                        STAGE 03
+                    </div>
+
+
+                    <div class="flow-node">
+
+                        <strong>
+                            Service
+                        </strong>
+
+                        <span>
+                            3 counters
+                        </span>
+
+                    </div>
+
+
+                    <p class="flow-time good">
+                        9 min wait
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="visual-footer">
+
+                <span class="footer-label">
+                    Suggested change
+                </span>
+
+
+                <p>
+
+                    Reassign one service staff member
+                    to Verification and evaluate the
+                    revised configuration.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     DATA BAND
+========================================================= -->
+
+<section class="data-band">
+
+    <div class="page-width data-row">
+
+
+        <div>
+
+            <strong>
+                400
+            </strong>
+
+            <span>
+                expected visitors
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                8
+            </strong>
+
+            <span>
+                available staff
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                3
+            </strong>
+
+            <span>
+                service stages
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                4
+            </strong>
+
+            <span>
+                visitor groups
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     DIAGNOSE
+========================================================= -->
+
+<section class="analysis-section">
+
+    <div class="page-width analysis-layout">
+
+
+        <div class="section-copy">
+
+            <p class="section-number">
+                01 / DIAGNOSE
+            </p>
+
+
+            <h2>
+                See the problem
+                before the queue forms.
+            </h2>
+
+
+            <p>
+
+                FairFlow evaluates the service setup
+                using virtual visitor journeys and
+                measures where delays begin to accumulate.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="performance-view">
+
+
+            <div class="performance-head">
+
+                <span>
+                    Service stage
+                </span>
+
+                <span>
+                    Expected wait
+                </span>
+
+            </div>
+
+
+
+            <div class="performance-row">
+
+                <div class="performance-label">
+                    Registration
+                </div>
+
+
+                <div class="bar-track">
+
+                    <div
+                        class="bar green-bar"
+                        data-width="23"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    6 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="performance-row">
+
+                <div class="performance-label">
+                    Verification
+                </div>
+
+
+                <div class="bar-track">
+
+                    <div
+                        class="bar coral-bar"
+                        data-width="92"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    31 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="performance-row">
+
+                <div class="performance-label">
+                    Service
+                </div>
+
+
+                <div class="bar-track">
+
+                    <div
+                        class="bar yellow-bar"
+                        data-width="34"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    9 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="performance-summary">
+
+                <span>
+                    Primary bottleneck
+                </span>
+
+                <strong>
+                    Verification
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FAIRNESS
+========================================================= -->
+
+<section
+    class="fairness-section"
+    id="fairness"
+>
+
+    <div class="page-width">
+
+
+        <div class="fairness-heading">
+
+            <p class="section-number light">
+                02 / COMPARE
+            </p>
+
+
+            <h2>
+                Average waiting time
+                isn't the whole story.
+            </h2>
+
+
+            <p>
+
+                The same service design can affect
+                different visitor groups in different ways.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="fairness-chart">
+
+
+            <div class="fairness-row">
+
+                <span>
+                    General visitors
+                </span>
+
+
+                <div class="fairness-track">
+
+                    <div
+                        class="fairness-fill"
+                        data-width="53"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    18 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="fairness-row">
+
+                <span>
+                    Elderly visitors
+                </span>
+
+
+                <div class="fairness-track">
+
+                    <div
+                        class="fairness-fill"
+                        data-width="82"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    31 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="fairness-row">
+
+                <span>
+                    Pregnant visitors
+                </span>
+
+
+                <div class="fairness-track">
+
+                    <div
+                        class="fairness-fill"
+                        data-width="76"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    29 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="fairness-row">
+
+                <span>
+                    Mobility-limited visitors
+                </span>
+
+
+                <div class="fairness-track">
+
+                    <div
+                        class="fairness-fill highlight-fill"
+                        data-width="91"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    34 min
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     OPTIMIZE
+========================================================= -->
+
+<section class="comparison-section">
+
+    <div class="page-width comparison-layout">
+
+
+        <div class="comparison-copy">
+
+            <p class="section-number">
+                03 / OPTIMIZE
+            </p>
+
+
+            <h2>
+                Test alternatives,
+                not assumptions.
+            </h2>
+
+
+            <p>
+
+                FairFlow compares staffing configurations
+                and shows whether a proposed change
+                improves service flow and visitor experience.
+
+            </p>
+
+
+
+            <div class="comparison-switch">
+
+                <button
+                    class="switch-button active"
+                    data-view="before"
+                >
+                    Before
+                </button>
+
+
+                <button
+                    class="switch-button"
+                    data-view="after"
+                >
+                    After
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="comparison-data">
+
+
+            <div class="comparison-title">
+
+                <span id="viewLabel">
+                    Current setup
+                </span>
+
+
+                <strong id="viewHeadline">
+                    Uneven staff utilization
+                </strong>
+
+            </div>
+
+
+
+            <div class="metric-line">
+
+                <span>
+                    Average waiting time
+                </span>
+
+                <strong id="averageWait">
+                    21 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="metric-line">
+
+                <span>
+                    Priority-group wait
+                </span>
+
+                <strong id="priorityWait">
+                    34 min
+                </strong>
+
+            </div>
+
+
+
+            <div class="metric-line">
+
+                <span>
+                    Verification staff
+                </span>
+
+                <strong id="verificationStaff">
+                    1
+                </strong>
+
+            </div>
+
+
+
+            <div class="metric-line">
+
+                <span>
+                    Service staff
+                </span>
+
+                <strong id="serviceStaff">
+                    3
+                </strong>
+
+            </div>
+
+
+
+            <div class="metric-line final-metric">
+
+                <span>
+                    Flow status
+                </span>
+
+                <strong id="flowStatus">
+                    Bottleneck present
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     WORKFLOW
+========================================================= -->
+
+<section
+    class="workflow-section"
+    id="workflow"
+>
+
+    <div class="page-width">
+
+
+        <div class="workflow-heading">
+
+            <p class="section-number">
+                04 / WORKFLOW
+            </p>
+
+
+            <h2>
+                From service setup
+                to better decisions.
+            </h2>
+
+        </div>
+
+
+
+        <div class="workflow-list">
+
+
+            <div class="workflow-item">
+
+                <span class="workflow-index">
+                    01
+                </span>
+
+
+                <h3>
+                    Define
+                </h3>
+
+
+                <p>
+
+                    Enter visitor demand, service stages,
+                    counters, service times and
+                    priority-group proportions.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="workflow-item">
+
+                <span class="workflow-index">
+                    02
+                </span>
+
+
+                <h3>
+                    Analyse
+                </h3>
+
+
+                <p>
+
+                    FairFlow models visitor movement
+                    through the service process and
+                    measures operational performance.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="workflow-item">
+
+                <span class="workflow-index">
+                    03
+                </span>
+
+
+                <h3>
+                    Compare
+                </h3>
+
+
+                <p>
+
+                    Review waiting time, staff utilization,
+                    bottlenecks and differences between
+                    visitor groups.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="workflow-item">
+
+                <span class="workflow-index">
+                    04
+                </span>
+
+
+                <h3>
+                    Improve
+                </h3>
+
+
+                <p>
+
+                    Evaluate alternative staffing
+                    arrangements and identify a
+                    stronger service configuration.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CLOSING
+========================================================= -->
+
+<section class="final-section">
+
+    <div class="page-width final-layout">
+
+        <div>
+
+            <p class="section-number light">
+                FAIRFLOW
+            </p>
+
+
+            <h2>
+                Better flow starts
+                with understanding the current one.
+            </h2>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    <div class="page-width footer-row">
+
+        <strong>
+            FairFlow.
+        </strong>
+
+
+        <span>
+            Service flow and accessibility optimization
+        </span>
+
+    </div>
+
+</footer>
+
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+
+</body>
+
+</html>

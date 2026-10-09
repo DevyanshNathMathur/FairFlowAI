@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Service Setup | FairFlow
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .validation-box {
+            display: none;
+            margin-top: 30px;
+            padding: 19px 21px;
+            border-left: 4px solid #e86f51;
+            background: #fff3ef;
+            color: #162b33;
+        }
+
+        .validation-box.visible {
+            display: block;
+        }
+
+        .validation-box strong {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+        }
+
+        .validation-error {
+            margin-top: 5px;
+            color: #687579;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .invalid-field {
+            border-color: #e86f51 !important;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(232, 111, 81, 0.08) !important;
+        }
+
+        .mix-error,
+        .stage-error {
+            display: none;
+            margin-top: 9px;
+            color: #e86f51;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .mix-error.visible,
+        .stage-error.visible {
+            display: block;
+        }
+
+        .scenario-form input::placeholder {
+            color: #9aa5a1;
+            opacity: 1;
+        }
+
+
+        /* =====================================================
+           DYNAMIC STAGES
+        ====================================================== */
+
+        .stage-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .stage-count-note {
+            color: #7d8784;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .add-stage-button {
+            flex-shrink: 0;
+            min-height: 36px;
+            padding: 0 13px;
+            border: 1px solid #9eb3ad;
+            border-radius: 4px;
+            background: #ffffff;
+            color: #087e78;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .add-stage-button:hover {
+            border-color: #087e78;
+            background: #f5fbf9;
+        }
+
+        .add-stage-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .dynamic-service-table {
+            border-top: 1px solid #162b33;
+        }
+
+        .dynamic-service-head,
+        .dynamic-service-row {
+            display: grid;
+
+            grid-template-columns:
+                minmax(170px, 1.35fr)
+                minmax(90px, 0.55fr)
+                minmax(135px, 0.75fr)
+                86px;
+
+            gap: 18px;
+            align-items: center;
+        }
+
+        .dynamic-service-head {
+            min-height: 42px;
+            padding: 0 2px;
+            border-bottom: 1px solid #d9dbd4;
+            color: #687579;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .dynamic-service-row {
+            min-height: 88px;
+            padding: 12px 2px;
+            border-bottom: 1px solid #d9dbd4;
+        }
+
+        .stage-name-wrap {
+            min-width: 0;
+        }
+
+        .stage-order {
+            display: block;
+            margin-bottom: 6px;
+            color: #e86f51;
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .dynamic-service-row input {
+            width: 100%;
+            height: 45px;
+            border: 1px solid #c9cec8;
+            border-radius: 3px;
+            padding: 0 12px;
+            background: white;
+            color: #162b33;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .dynamic-service-row input:hover {
+            border-color: #abb4ae;
+        }
+
+        .dynamic-service-row input:focus {
+            border-color: #087e78;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(8, 126, 120, 0.08);
+        }
+
+        .dynamic-service-row .input-unit {
+            position: relative;
+        }
+
+        .dynamic-service-row .input-unit input {
+            padding-right: 50px;
+        }
+
+        .dynamic-service-row .input-unit small {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            color: #8a938f;
+            font-size: 9px;
+            pointer-events: none;
+        }
+
+        .remove-stage-button {
+            min-height: 36px;
+            padding: 0 10px;
+            border: 1px solid #dcc7c0;
+            border-radius: 4px;
+            background: #fff8f5;
+            color: #c76148;
+            font-size: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .remove-stage-button:hover {
+            border-color: #d76b4f;
+            background: #fff0eb;
+        }
+
+        .remove-stage-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.32;
+        }
+
+
+        @media (max-width: 760px) {
+
+            .dynamic-service-head {
+                display: none;
+            }
+
+            .dynamic-service-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                padding: 18px 0;
+            }
+
+            .stage-name-wrap {
+                grid-column: 1 / -1;
+            }
+
+            .remove-stage-button {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+
+            .stage-toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="page-width nav-inner">
+
+        <a
+            class="wordmark"
+            href="/"
+        >
+            FairFlow<span>.</span>
+        </a>
+
+        <a
+            class="back-link"
+            href="/"
+        >
+            ← Back to overview
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="form-page">
+
+    <div class="page-width form-layout">
+
+
+        <section class="form-intro">
+
+            <p class="section-number">
+                SERVICE SETUP
+            </p>
+
+            <h1>
+                Enter your service setup.
+            </h1>
+
+            <p>
+
+                Provide the expected visitor demand,
+                define the ordered service stages,
+                add available counters and service times,
+                and estimate the visitor mix.
+
+                FairFlow will analyse the current flow
+                and test whether the same counter capacity
+                could be allocated more effectively.
+
+            </p>
+
+
+            <div class="input-guide">
+
+                <div>
+                    <strong>01</strong>
+
+                    <span>
+                        Define visitor demand
+                    </span>
+                </div>
+
+                <div>
+                    <strong>02</strong>
+
+                    <span>
+                        Configure service stages
+                    </span>
+                </div>
+
+                <div>
+                    <strong>03</strong>
+
+                    <span>
+                        Define visitor mix
+                    </span>
+                </div>
+
+                <div>
+                    <strong>04</strong>
+
+                    <span>
+                        Analyse service flow
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="scenario-form-area">
+
+            <form
+                class="scenario-form"
+                method="POST"
+                action="/simulate"
+                id="serviceSetupForm"
+                data-min-stages="{{ min_stages }}"
+                data-max-stages="{{ max_stages }}"
+                novalidate
+            >
+
+
+                {% if errors %}
+
+                <div class="validation-box visible">
+
+                    <strong>
+                        Please review the following:
+                    </strong>
+
+                    {% for error in errors %}
+
+                    <p class="validation-error">
+                        • {{ error }}
+                    </p>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+
+
+
+                <div
+                    class="validation-box"
+                    id="clientErrorBox"
+                >
+
+                    <strong>
+                        Please review the following:
+                    </strong>
+
+                    <div id="clientErrorList">
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     VISITOR DEMAND
+                ========================================== -->
+
+                <section class="form-section">
+
+
+                    <div class="form-section-title">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Visitor demand
+                            </h2>
+
+                            <p>
+                                Define the expected service load.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="field-grid two-column">
+
+
+                        <label class="field">
+
+                            <span>
+                                Expected visitors
+                            </span>
+
+                            <input
+                                type="number"
+                                name="visitor_count"
+                                value="{{ form_data.get('visitor_count', '') }}"
+                                placeholder="e.g. 400"
+                                min="1"
+                                max="10000"
+                                step="1"
+                                required
+                            >
+
+                        </label>
+
+
+
+                        <label class="field">
+
+                            <span>
+                                Session duration
+                            </span>
+
+                            <div class="input-unit">
+
+                                <input
+                                    type="number"
+                                    name="session_hours"
+                                    value="{{ form_data.get('session_hours', '') }}"
+                                    placeholder="e.g. 6"
+                                    min="0.1"
+                                    max="24"
+                                    step="0.1"
+                                    required
+                                >
+
+                                <small>
+                                    hours
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                    </div>
+
+
+                </section>
+
+
+
+                <!-- =========================================
+                     DYNAMIC SERVICE STAGES
+                ========================================== -->
+
+                <section class="form-section">
+
+
+                    <div class="form-section-title">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Service stages
+                            </h2>
+
+                            <p>
+
+                                Rename, add or remove stages.
+                                Visitors move through the stages
+                                in the order shown below.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stage-toolbar">
+
+
+                        <div class="stage-count-note">
+
+                            <strong id="stageCountText">
+                            </strong>
+
+                            <br>
+
+                            Minimum {{ min_stages }} stages ·
+                            Maximum {{ max_stages }} stages
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="add-stage-button"
+                            id="addStageButton"
+                        >
+                            + Add stage
+                        </button>
+
+
+                    </div>
+
+
+
+                    <div class="dynamic-service-table">
+
+
+                        <div class="dynamic-service-head">
+
+                            <span>
+                                Stage name
+                            </span>
+
+                            <span>
+                                Counters
+                            </span>
+
+                            <span>
+                                Avg. service time
+                            </span>
+
+                            <span>
+                                Action
+                            </span>
+
+                        </div>
+
+
+
+                        <div id="stagesContainer">
+
+
+                            {% for stage in form_data.get('stages', []) %}
+
+
+                            <div
+                                class="dynamic-service-row stage-row"
+                            >
+
+
+                                <div class="stage-name-wrap">
+
+                                    <span class="stage-order">
+                                        Stage {{ loop.index }}
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        name="stage_name"
+                                        value="{{ stage.get('name', '') }}"
+                                        placeholder="e.g. Registration"
+                                        maxlength="50"
+                                        required
+                                        aria-label="Stage {{ loop.index }} name"
+                                    >
+
+                                </div>
+
+
+
+                                <input
+                                    type="number"
+                                    name="stage_counters"
+                                    value="{{ stage.get('counters', '') }}"
+                                    placeholder="e.g. 2"
+                                    min="1"
+                                    max="20"
+                                    step="1"
+                                    required
+                                    aria-label="Stage {{ loop.index }} counters"
+                                >
+
+
+
+                                <div class="input-unit">
+
+                                    <input
+                                        type="number"
+                                        name="stage_time"
+                                        value="{{ stage.get('service_time', '') }}"
+                                        placeholder="e.g. 3"
+                                        min="0.1"
+                                        step="0.1"
+                                        required
+                                        aria-label="Stage {{ loop.index }} service time"
+                                    >
+
+                                    <small>
+                                        min
+                                    </small>
+
+                                </div>
+
+
+
+                                <button
+                                    type="button"
+                                    class="remove-stage-button"
+                                >
+                                    Remove
+                                </button>
+
+
+                            </div>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <p
+                        class="stage-error"
+                        id="stageError"
+                    >
+                    </p>
+
+
+                </section>
+
+
+
+                <!-- =========================================
+                     VISITOR MIX
+                ========================================== -->
+
+                <section class="form-section">
+
+
+                    <div class="form-section-title">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Visitor mix
+                            </h2>
+
+                            <p>
+                                Estimate the share of each visitor group.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="visitor-grid">
+
+
+                        <label class="field">
+
+                            <span>
+                                General
+                            </span>
+
+                            <div class="input-unit">
+
+                                <input
+                                    class="mix-input"
+                                    type="number"
+                                    name="general"
+                                    value="{{ form_data.get('general', '') }}"
+                                    placeholder="e.g. 60"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                    required
+                                >
+
+                                <small>
+                                    %
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+
+                        <label class="field">
+
+                            <span>
+                                Elderly
+                            </span>
+
+                            <div class="input-unit">
+
+                                <input
+                                    class="mix-input"
+                                    type="number"
+                                    name="elderly"
+                                    value="{{ form_data.get('elderly', '') }}"
+                                    placeholder="e.g. 15"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                    required
+                                >
+
+                                <small>
+                                    %
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+
+                        <label class="field">
+
+                            <span>
+                                Pregnant
+                            </span>
+
+                            <div class="input-unit">
+
+                                <input
+                                    class="mix-input"
+                                    type="number"
+                                    name="pregnant"
+                                    value="{{ form_data.get('pregnant', '') }}"
+                                    placeholder="e.g. 15"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                    required
+                                >
+
+                                <small>
+                                    %
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+
+                        <label class="field">
+
+                            <span>
+                                Mobility-limited
+                            </span>
+
+                            <div class="input-unit">
+
+                                <input
+                                    class="mix-input"
+                                    type="number"
+                                    name="mobility"
+                                    value="{{ form_data.get('mobility', '') }}"
+                                    placeholder="e.g. 10"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                    required
+                                >
+
+                                <small>
+                                    %
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                    </div>
+
+
+
+                    <p class="form-hint">
+
+                        Visitor percentages should total
+                        exactly 100%.
+
+                        Current total:
+
+                        <strong id="mixTotal">
+                            0%
+                        </strong>
+
+                    </p>
+
+
+                    <p
+                        class="mix-error"
+                        id="mixError"
+                    >
+                        Visitor percentages must total 100%.
+                    </p>
+
+
+                </section>
+
+
+
+                <div class="form-submit">
+
+
+                    <div>
+
+                        <strong>
+                            Ready to analyse?
+                        </strong>
+
+                        <span>
+
+                            FairFlow will simulate the
+                            configured service journey,
+                            screen staffing allocations and
+                            verify the strongest options.
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        class="main-cta"
+                        type="submit"
+                    >
+                        Analyze service flow
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </section>
+
+
+    </div>
+
+
+</main>
+
+
+
+<footer class="footer">
+
+    <div class="page-width footer-row">
+
+        <strong>
+            FairFlow.
+        </strong>
+
+        <span>
+            Service flow and accessibility optimization
+        </span>
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+    const form =
+        document.getElementById(
+            "serviceSetupForm"
+        );
+
+
+    const MIN_STAGES =
+        Number(
+            form.dataset.minStages
+        );
+
+
+    const MAX_STAGES =
+        Number(
+            form.dataset.maxStages
+        );
+
+
+    const stagesContainer =
+        document.getElementById(
+            "stagesContainer"
+        );
+
+
+    const addStageButton =
+        document.getElementById(
+            "addStageButton"
+        );
+
+
+    const stageCountText =
+        document.getElementById(
+            "stageCountText"
+        );
+
+
+    const stageError =
+        document.getElementById(
+            "stageError"
+        );
+
+
+    const mixInputs =
+        document.querySelectorAll(
+            ".mix-input"
+        );
+
+
+    const mixTotal =
+        document.getElementById(
+            "mixTotal"
+        );
+
+
+    const mixError =
+        document.getElementById(
+            "mixError"
+        );
+
+
+    const clientErrorBox =
+        document.getElementById(
+            "clientErrorBox"
+        );
+
+
+    const clientErrorList =
+        document.getElementById(
+            "clientErrorList"
+        );
+
+
+
+    /* =====================================================
+       STAGES
+    ===================================================== */
+
+    function getStageRows() {
+
+        return Array.from(
+
+            stagesContainer.querySelectorAll(
+                ".stage-row"
+            )
+
+        );
+
+    }
+
+
+
+    function updateStageControls() {
+
+
+        const rows =
+            getStageRows();
+
+
+        const count =
+            rows.length;
+
+
+        stageCountText.textContent =
+
+            `${count} ${
+                count === 1
+                    ? "stage"
+                    : "stages"
+            } configured`;
+
+
+        addStageButton.disabled =
+            count >= MAX_STAGES;
+
+
+        rows.forEach(
+            (row, index) => {
+
+
+                const orderLabel =
+                    row.querySelector(
+                        ".stage-order"
+                    );
+
+
+                const nameInput =
+                    row.querySelector(
+                        'input[name="stage_name"]'
+                    );
+
+
+                const counterInput =
+                    row.querySelector(
+                        'input[name="stage_counters"]'
+                    );
+
+
+                const timeInput =
+                    row.querySelector(
+                        'input[name="stage_time"]'
+                    );
+
+
+                const removeButton =
+                    row.querySelector(
+                        ".remove-stage-button"
+                    );
+
+
+                orderLabel.textContent =
+                    `Stage ${index + 1}`;
+
+
+                nameInput.setAttribute(
+                    "aria-label",
+                    `Stage ${index + 1} name`
+                );
+
+
+                counterInput.setAttribute(
+                    "aria-label",
+                    `Stage ${index + 1} counters`
+                );
+
+
+                timeInput.setAttribute(
+                    "aria-label",
+                    `Stage ${index + 1} service time`
+                );
+
+
+                removeButton.disabled =
+                    count <= MIN_STAGES;
+
+
+            }
+        );
+
+
+    }
+
+
+
+    function createStageRow() {
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "dynamic-service-row stage-row";
+
+
+        row.innerHTML = `
+
+            <div class="stage-name-wrap">
+
+                <span class="stage-order">
+                    Stage
+                </span>
+
+                <input
+                    type="text"
+                    name="stage_name"
+                    value=""
+                    placeholder="e.g. Triage"
+                    maxlength="50"
+                    required
+                >
+
+            </div>
+
+
+            <input
+                type="number"
+                name="stage_counters"
+                value=""
+                placeholder="e.g. 2"
+                min="1"
+                max="20"
+                step="1"
+                required
+            >
+
+
+            <div class="input-unit">
+
+                <input
+                    type="number"
+                    name="stage_time"
+                    value=""
+                    placeholder="e.g. 3"
+                    min="0.1"
+                    step="0.1"
+                    required
+                >
+
+                <small>
+                    min
+                </small>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="remove-stage-button"
+            >
+                Remove
+            </button>
+
+        `;
+
+
+        return row;
+
+
+    }
+
+
+
+    addStageButton.addEventListener(
+        "click",
+        () => {
+
+
+            if (
+                getStageRows().length
+                >=
+                MAX_STAGES
+            ) {
+
+                return;
+
+            }
+
+
+            const row =
+                createStageRow();
+
+
+            stagesContainer.appendChild(
+                row
+            );
+
+
+            updateStageControls();
+
+
+            row
+                .querySelector(
+                    'input[name="stage_name"]'
+                )
+                .focus();
+
+
+        }
+    );
+
+
+
+    stagesContainer.addEventListener(
+        "click",
+        event => {
+
+
+            const removeButton =
+                event.target.closest(
+                    ".remove-stage-button"
+                );
+
+
+            if (
+                !removeButton
+            ) {
+
+                return;
+
+            }
+
+
+            const rows =
+                getStageRows();
+
+
+            if (
+                rows.length
+                <=
+                MIN_STAGES
+            ) {
+
+                return;
+
+            }
+
+
+            removeButton
+                .closest(
+                    ".stage-row"
+                )
+                .remove();
+
+
+            stageError
+                .classList
+                .remove(
+                    "visible"
+                );
+
+
+            stageError.textContent =
+                "";
+
+
+            updateStageControls();
+
+
+        }
+    );
+
+
+
+    /* =====================================================
+       VISITOR MIX
+    ===================================================== */
+
+    function updateMixTotal() {
+
+
+        let total =
+            0;
+
+
+        mixInputs.forEach(
+            input => {
+
+
+                const value =
+                    Number(
+                        input.value
+                    );
+
+
+                if (
+                    input.value.trim() !== ""
+                    &&
+                    Number.isFinite(
+                        value
+                    )
+                ) {
+
+                    total +=
+                        value;
+
+                }
+
+
+            }
+        );
+
+
+        const rounded =
+            Math.round(
+                total * 10
+            )
+            /
+            10;
+
+
+        mixTotal.textContent =
+            `${rounded}%`;
+
+
+        if (
+            Math.abs(
+                total - 100
+            )
+            <=
+            0.01
+        ) {
+
+            mixTotal.style.color =
+                "#087e78";
+
+
+            mixError
+                .classList
+                .remove(
+                    "visible"
+                );
+
+
+            return true;
+
+        }
+
+
+        mixTotal.style.color =
+            "#e86f51";
+
+
+        return false;
+
+
+    }
+
+
+
+    mixInputs.forEach(
+        input => {
+
+
+            input.addEventListener(
+                "input",
+                updateMixTotal
+            );
+
+
+        }
+    );
+
+
+
+    /* =====================================================
+       HELPERS
+    ===================================================== */
+
+    function getField(
+        name
+    ) {
+
+        return form.elements[
+            name
+        ];
+
+    }
+
+
+
+    function getNumberFromField(
+        field
+    ) {
+
+
+        if (
+            !field
+            ||
+            field.value.trim() === ""
+        ) {
+
+            return null;
+
+        }
+
+
+        const value =
+            Number(
+                field.value
+            );
+
+
+        if (
+            !Number.isFinite(
+                value
+            )
+        ) {
+
+            return null;
+
+        }
+
+
+        return value;
+
+
+    }
+
+
+
+    function clearErrors() {
+
+
+        clientErrorBox
+            .classList
+            .remove(
+                "visible"
+            );
+
+
+        clientErrorList.innerHTML =
+            "";
+
+
+        mixError
+            .classList
+            .remove(
+                "visible"
+            );
+
+
+        stageError
+            .classList
+            .remove(
+                "visible"
+            );
+
+
+        stageError.textContent =
+            "";
+
+
+        form
+            .querySelectorAll(
+                "input"
+            )
+            .forEach(
+                input => {
+
+
+                    input
+                        .classList
+                        .remove(
+                            "invalid-field"
+                        );
+
+
+                }
+            );
+
+
+    }
+
+
+
+    function showErrors(
+        errors,
+        firstInvalidField
+    ) {
+
+
+        clientErrorList.innerHTML =
+            "";
+
+
+        errors.forEach(
+            error => {
+
+
+                const paragraph =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                paragraph.className =
+                    "validation-error";
+
+
+                paragraph.textContent =
+                    `• ${error}`;
+
+
+                clientErrorList.appendChild(
+                    paragraph
+                );
+
+
+            }
+        );
+
+
+        clientErrorBox
+            .classList
+            .add(
+                "visible"
+            );
+
+
+        clientErrorBox.scrollIntoView({
+
+            behavior:
+                "smooth",
+
+            block:
+                "center"
+
+        });
+
+
+        if (
+            firstInvalidField
+        ) {
+
+            setTimeout(
+                () => {
+
+
+                    firstInvalidField.focus();
+
+
+                },
+                400
+            );
+
+        }
+
+
+    }
+
+
+
+    /* =====================================================
+       FORM VALIDATION
+    ===================================================== */
+
+    form.addEventListener(
+        "submit",
+        event => {
+
+
+            clearErrors();
+
+
+            const errors =
+                [];
+
+
+            let firstInvalidField =
+                null;
+
+
+
+            function addError(
+                field,
+                message
+            ) {
+
+
+                errors.push(
+                    message
+                );
+
+
+                if (
+                    field
+                ) {
+
+
+                    field
+                        .classList
+                        .add(
+                            "invalid-field"
+                        );
+
+
+                    if (
+                        !firstInvalidField
+                    ) {
+
+                        firstInvalidField =
+                            field;
+
+                    }
+
+
+                }
+
+
+            }
+
+
+
+            /* ---------------------------------------------
+               VISITORS
+            --------------------------------------------- */
+
+            const visitorField =
+                getField(
+                    "visitor_count"
+                );
+
+
+            const visitors =
+                getNumberFromField(
+                    visitorField
+                );
+
+
+            if (
+                visitors === null
+            ) {
+
+                addError(
+                    visitorField,
+                    "Expected visitors is required."
+                );
+
+            }
+
+            else if (
+                !Number.isInteger(
+                    visitors
+                )
+            ) {
+
+                addError(
+                    visitorField,
+                    "Expected visitors must be a whole number."
+                );
+
+            }
+
+            else if (
+                visitors < 1
+            ) {
+
+                addError(
+                    visitorField,
+                    "Expected visitors must be at least 1."
+                );
+
+            }
+
+            else if (
+                visitors > 10000
+            ) {
+
+                addError(
+                    visitorField,
+                    "Expected visitors cannot be greater than 10,000."
+                );
+
+            }
+
+
+
+            /* ---------------------------------------------
+               SESSION
+            --------------------------------------------- */
+
+            const sessionField =
+                getField(
+                    "session_hours"
+                );
+
+
+            const sessionHours =
+                getNumberFromField(
+                    sessionField
+                );
+
+
+            if (
+                sessionHours === null
+            ) {
+
+                addError(
+                    sessionField,
+                    "Session duration is required."
+                );
+
+            }
+
+            else if (
+                sessionHours < 0.1
+            ) {
+
+                addError(
+                    sessionField,
+                    "Session duration must be at least 0.1 hours."
+                );
+
+            }
+
+            else if (
+                sessionHours > 24
+            ) {
+
+                addError(
+                    sessionField,
+                    "Session duration cannot be greater than 24 hours."
+                );
+
+            }
+
+
+
+            /* ---------------------------------------------
+               DYNAMIC STAGES
+            --------------------------------------------- */
+
+            const stageRows =
+                getStageRows();
+
+
+            if (
+                stageRows.length
+                <
+                MIN_STAGES
+                ||
+                stageRows.length
+                >
+                MAX_STAGES
+            ) {
+
+
+                const message =
+                    `Please configure between `
+                    +
+                    `${MIN_STAGES} and `
+                    +
+                    `${MAX_STAGES} service stages.`;
+
+
+                errors.push(
+                    message
+                );
+
+
+                stageError.textContent =
+                    message;
+
+
+                stageError
+                    .classList
+                    .add(
+                        "visible"
+                    );
+
+
+            }
+
+
+
+            const seenStageNames =
+                new Map();
+
+
+
+            stageRows.forEach(
+                (row, index) => {
+
+
+                    const position =
+                        index + 1;
+
+
+                    const nameField =
+                        row.querySelector(
+                            'input[name="stage_name"]'
+                        );
+
+
+                    const counterField =
+                        row.querySelector(
+                            'input[name="stage_counters"]'
+                        );
+
+
+                    const timeField =
+                        row.querySelector(
+                            'input[name="stage_time"]'
+                        );
+
+
+                    const stageName =
+                        nameField
+                            .value
+                            .trim();
+
+
+
+                    if (
+                        !stageName
+                    ) {
+
+                        addError(
+                            nameField,
+                            `Stage ${position} name is required.`
+                        );
+
+                    }
+
+                    else {
+
+
+                        const normalized =
+                            stageName.toLocaleLowerCase();
+
+
+                        if (
+                            seenStageNames.has(
+                                normalized
+                            )
+                        ) {
+
+
+                            addError(
+
+                                nameField,
+
+                                `Stage name "${stageName}" is duplicated. `
+                                +
+                                "Each stage must have a unique name."
+
+                            );
+
+
+                            const firstField =
+                                seenStageNames.get(
+                                    normalized
+                                );
+
+
+                            firstField
+                                .classList
+                                .add(
+                                    "invalid-field"
+                                );
+
+
+                        }
+
+                        else {
+
+
+                            seenStageNames.set(
+                                normalized,
+                                nameField
+                            );
+
+
+                        }
+
+
+                    }
+
+
+
+                    const displayName =
+                        stageName
+                        ||
+                        `Stage ${position}`;
+
+
+
+                    const counters =
+                        getNumberFromField(
+                            counterField
+                        );
+
+
+                    if (
+                        counters === null
+                    ) {
+
+                        addError(
+                            counterField,
+                            `${displayName} counters is required.`
+                        );
+
+                    }
+
+                    else if (
+                        !Number.isInteger(
+                            counters
+                        )
+                    ) {
+
+                        addError(
+                            counterField,
+                            `${displayName} counters must be a whole number.`
+                        );
+
+                    }
+
+                    else if (
+                        counters < 1
+                    ) {
+
+                        addError(
+                            counterField,
+                            `${displayName} counters must be at least 1.`
+                        );
+
+                    }
+
+                    else if (
+                        counters > 20
+                    ) {
+
+                        addError(
+                            counterField,
+                            `${displayName} counters cannot be greater than 20.`
+                        );
+
+                    }
+
+
+
+                    const serviceTime =
+                        getNumberFromField(
+                            timeField
+                        );
+
+
+                    if (
+                        serviceTime === null
+                    ) {
+
+                        addError(
+                            timeField,
+                            `${displayName} service time is required.`
+                        );
+
+                    }
+
+                    else if (
+                        serviceTime < 0
+                    ) {
+
+                        addError(
+                            timeField,
+                            `${displayName} service time cannot be negative.`
+                        );
+
+                    }
+
+                    else if (
+                        serviceTime === 0
+                    ) {
+
+                        addError(
+                            timeField,
+                            `${displayName} service time must be greater than 0 minutes.`
+                        );
+
+                    }
+
+
+                }
+            );
+
+
+
+            /* ---------------------------------------------
+               GROUP MIX
+            --------------------------------------------- */
+
+            const groupFields = [
+
+                [
+                    "general",
+                    "General visitor percentage"
+                ],
+
+                [
+                    "elderly",
+                    "Elderly visitor percentage"
+                ],
+
+                [
+                    "pregnant",
+                    "Pregnant visitor percentage"
+                ],
+
+                [
+                    "mobility",
+                    "Mobility-limited visitor percentage"
+                ]
+
+            ];
+
+
+            let groupTotal =
+                0;
+
+
+            let groupValuesValid =
+                true;
+
+
+
+            groupFields.forEach(
+                ([name, label]) => {
+
+
+                    const field =
+                        getField(
+                            name
+                        );
+
+
+                    const value =
+                        getNumberFromField(
+                            field
+                        );
+
+
+                    if (
+                        value === null
+                    ) {
+
+                        groupValuesValid =
+                            false;
+
+
+                        addError(
+                            field,
+                            `${label} is required.`
+                        );
+
+                    }
+
+                    else if (
+                        value < 0
+                        ||
+                        value > 100
+                    ) {
+
+                        groupValuesValid =
+                            false;
+
+
+                        addError(
+                            field,
+                            `${label} must be between 0 and 100.`
+                        );
+
+                    }
+
+                    else {
+
+                        groupTotal +=
+                            value;
+
+                    }
+
+
+                }
+            );
+
+
+
+            if (
+                groupValuesValid
+                &&
+                Math.abs(
+                    groupTotal - 100
+                )
+                >
+                0.01
+            ) {
+
+
+                const roundedTotal =
+                    Math.round(
+                        groupTotal * 10
+                    )
+                    /
+                    10;
+
+
+                errors.push(
+
+                    "Visitor percentages must total 100%. "
+                    +
+                    `Current total is ${roundedTotal}%.`
+
+                );
+
+
+                mixInputs.forEach(
+                    input => {
+
+
+                        input
+                            .classList
+                            .add(
+                                "invalid-field"
+                            );
+
+
+                    }
+                );
+
+
+                if (
+                    !firstInvalidField
+                ) {
+
+                    firstInvalidField =
+                        mixInputs[0];
+
+                }
+
+
+                mixError
+                    .classList
+                    .add(
+                        "visible"
+                    );
+
+
+            }
+
+
+
+            if (
+                errors.length > 0
+            ) {
+
+                event.preventDefault();
+
+
+                showErrors(
+                    errors,
+                    firstInvalidField
+                );
+
+
+            }
+
+
+        }
+    );
+
+
+
+    form.addEventListener(
+        "input",
+        event => {
+
+
+            if (
+                event.target.matches(
+                    "input"
+                )
+            ) {
+
+                event.target
+                    .classList
+                    .remove(
+                        "invalid-field"
+                    );
+
+            }
+
+
+        }
+    );
+
+
+
+    updateStageControls();
+
+    updateMixTotal();
+
+
+</script>
+
+
+</body>
+
+</html>
