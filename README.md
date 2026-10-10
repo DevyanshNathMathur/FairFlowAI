@@ -2,6 +2,8 @@
 
 **Adaptive Queue, Service Flow & Accessibility Optimizer**
 
+🌐 Live Application: https://fairflowai.onrender.com/
+
 FairFlow AI is a web-based decision-support system designed to analyse service queues, identify bottlenecks, compare visitor waiting experiences, and recommend better use of available service counters.
 
 The system combines service-flow simulation, machine-learning-based waiting-time prediction, staffing optimization, and fairness-aware recommendation logic.
